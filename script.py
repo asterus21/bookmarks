@@ -2,14 +2,35 @@ import re
 import os
 
 from datetime import datetime
-# import yaml
+import yaml
 
 from constants import *
 from bookmarks import *
 
 
-# with open('constants.yaml', 'r') as constants:
-#     vars = yaml.save_load()
+# for the input
+def get_constants():
+    with open('constants.yaml', 'r') as constants:
+        return yaml.safe_load(constants)
+
+
+# browsers:
+#   - chrome    0
+#   - yandex    1
+#   - opera     2
+#   - mozilla   3
+
+
+def get_browser(constants):
+    return constants.get('browsers')
+
+
+def get_bookmarks_path(constants, browser):
+    return constants.get('bookmarks').get(browser)
+
+
+def get_guid(constants, browser, build):
+    return constants.get('guids').get(browser).get(build)
 
 
 def get_folders(url) -> list:
@@ -41,8 +62,8 @@ def parse_build(string: str) -> str:
     return build.replace('.', '')
 
 
-def main():
-    '''Performs the main logic of the script.'''
+
+def get_url():
     monolith = QA_WEBSOFT  + get_build(
         get_build_number(
             get_folders(MONOLITH), MONOLITH_REGEX))
@@ -50,8 +71,24 @@ def main():
         get_build_number(
             get_folders(PLATFORM), PLATFORM_REGEX)))
     devops   = DEV_WEBSOFT + str(datetime.now().isoweekday())
+    return monolith, platform, devops
+
+
+def main():
+    '''Performs the main logic of the script.'''
+    constants = get_constants()
+    browser = get_browser(constants)[0]
+    bookmarks = get_bookmarks_path(constants, browser)
     for i in zip(
-                (MONOLITH_GUID, QA_GUID, DEV_GUID),
-                (monolith, platform, devops)
+                (
+                    get_guid(constants, browser, build='monolith'),
+                    get_guid(constants, browser, build='platform'),
+                    get_guid(constants, browser, build='devops')
+                 ),
+                (
+                    get_url()[0],
+                    get_url()[1],
+                    get_url()[2]
+                 )
                 ):
-        change_bookmarks(CHROME, i[0], i[1])
+        change_bookmarks(bookmarks, i[0], i[1])
