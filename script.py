@@ -2,9 +2,14 @@ import re
 import os
 
 from datetime import datetime
+# import yaml
 
 from constants import *
 from bookmarks import *
+
+
+# with open('constants.yaml', 'r') as constants:
+#     vars = yaml.save_load()
 
 
 def get_folders(url) -> list:
@@ -13,7 +18,7 @@ def get_folders(url) -> list:
         folders = os.listdir(url)
         return folders
     except Exception as e:
-        print(f"Unexpected error ocurred: {e}. Otherwise the VPN services is off.")
+        print(f"Unexpected error ocurred: {e}. Otherwise the VPN service is off.")
 
 
 def get_build_number(folders: list, regex: str) -> list:
@@ -31,12 +36,13 @@ def get_build(builds: list) -> str:
 
 
 def parse_build(string: str) -> str:
-    '''Parsers a build folder name to get a build number.'''
+    '''Parses a build folder name to get a build number.'''
     build = re.findall(r'\d+\.\d+', string)[-1]
     return build.replace('.', '')
 
 
-def make_paths():
+def main():
+    '''Performs the main logic of the script.'''
     monolith = QA_WEBSOFT  + get_build(
         get_build_number(
             get_folders(MONOLITH), MONOLITH_REGEX))
@@ -44,11 +50,8 @@ def make_paths():
         get_build_number(
             get_folders(PLATFORM), PLATFORM_REGEX)))
     devops   = DEV_WEBSOFT + str(datetime.now().isoweekday())
-    return monolith, platform, devops
-
-
-def main():
-    '''Performs the main logic of the script.'''
-    ID = MONOLITH_GUID, QA_GUID, DEV_GUID
-    for i in zip(ID, make_paths()):
+    for i in zip(
+                (MONOLITH_GUID, QA_GUID, DEV_GUID),
+                (monolith, platform, devops)
+                ):
         change_bookmarks(CHROME, i[0], i[1])
