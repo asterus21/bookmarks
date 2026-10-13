@@ -1,25 +1,30 @@
-from bookmarks import *
-from builds import *
-from browser import *
 from constants import *
+from bookmarks import *
+from yaml_ import *
+from builds import *
+from misc import *
 
 
-def main():
+def main(browser):
     '''Performs the main logic of the script.'''
-    constants        = get_constants()
-    chrome           = get_browser(constants)[0]
-    # yandex         = get_browser(constants)[1]
-    # opera          = get_browser(constants)[2]
-    # mozilla        = get_browser(constants)[3]
-    bookmarks_chrome = get_bookmarks_path(constants, chrome)
-    monolith         = get_monolith(QA_WEBSOFT, MONOLITH, MONOLITH_REGEX)
-    platform         = get_platform(QA_WEBSOFT, PLATFORM, PLATFORM_REGEX)
-    developer        = get_developer(DEV_WEBSOFT)
+    print_script()
+    CONSTANTS = get_constants()
+    match browser:
+        case 'chrome':  browser = get_browsers(CONSTANTS)[0]
+        case 'yandex':  browser = get_browsers(CONSTANTS)[1]
+        case 'opera':   browser = get_browsers(CONSTANTS)[2]
+        case 'mozilla': browser = get_browsers(CONSTANTS)[3]
+        case _:         browser = get_browsers(CONSTANTS)[0]
+    print(browser)
+    bookmarks = get_bookmarks_path(CONSTANTS, browser)
+    monolith  = get_monolith(QA_WEBSOFT, MONOLITH, MONOLITH_REGEX)
+    platform  = get_platform(QA_WEBSOFT, PLATFORM, PLATFORM_REGEX)
+    developer = get_developer(DEV_WEBSOFT)    
     for i in zip(
                 (
-                    get_guid(constants, chrome, build='monolith'),
-                    get_guid(constants, chrome, build='platform'),
-                    get_guid(constants, chrome, build='devops')
+                    get_guid(CONSTANTS, browser, build='monolith'),
+                    get_guid(CONSTANTS, browser, build='platform'),
+                    get_guid(CONSTANTS, browser, build='devops')
                 ),
                 (
                     monolith,
@@ -27,4 +32,4 @@ def main():
                     developer
                  )
                 ):
-        change_bookmarks(bookmarks_chrome, i[0], i[1])
+        change_bookmarks(bookmarks, i[0], i[1])

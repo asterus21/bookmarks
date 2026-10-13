@@ -16,13 +16,12 @@ def get_build_number(folders: list, regex: str) -> list:
     builds = [
         re.findall(regex, build) for build in folders if build
     ]
-    return(builds)
+    return builds
 
 
 def get_build(builds: list, monolith=False) -> str:
     '''Gets a latest build from the list of build folders.'''
     folders = [build for build in builds if build]
-    print(folders)
     folder = folders[-1][-1]
     if monolith:
         return folder

@@ -1,13 +1,14 @@
 import yaml
 
 
-# for the input
+# TODO: make it a Class to initialize the constants object
+# TODO: and call methods to get a needed field
 def get_constants():
     with open('constants.yaml', 'r') as constants:
         return yaml.safe_load(constants)
 
 
-def get_browser(constants):
+def get_browsers(constants) -> str:
     return constants.get('browsers')
 
 
