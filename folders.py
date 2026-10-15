@@ -26,4 +26,4 @@ def get_build(builds: list, monolith=False) -> str:
     if monolith:
         return folder
     else:
-        return re.findall(r'\d+\.\d+', folder)[-1].replace('.', '')
+        return re.findall(r'p_1\.\d+\.(\d+\.\d+)', folder)[-1].replace('.', '')

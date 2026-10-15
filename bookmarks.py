@@ -12,7 +12,6 @@ def change_bookmarks(bookmarks: str, guid: str, url: str) -> None:
                 if links.check_url(url):
                     value['url'] = url
                     break
-                else:
-                  pass
+                else: pass
         json.dump(data, file, ensure_ascii=False, indent=4)
     return

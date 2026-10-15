@@ -15,7 +15,6 @@ def main(browser):
         case 'opera':   browser = get_browsers(CONSTANTS)[2]
         case 'mozilla': browser = get_browsers(CONSTANTS)[3]
         case _:         browser = get_browsers(CONSTANTS)[0]
-    print(browser)
     bookmarks = get_bookmarks_path(CONSTANTS, browser)
     monolith  = get_monolith(QA_WEBSOFT, MONOLITH, MONOLITH_REGEX)
     platform  = get_platform(QA_WEBSOFT, PLATFORM, PLATFORM_REGEX)
@@ -33,3 +32,4 @@ def main(browser):
                  )
                 ):
         change_bookmarks(bookmarks, i[0], i[1])
+    print(print_time(), 'Bookmarks have been changed...')

@@ -2,7 +2,7 @@ import yaml
 
 
 # TODO: make it a Class to initialize the constants object
-# TODO: and call methods to get a needed field
+# TODO: and call its methods to get a needed field
 def get_constants():
     with open('constants.yaml', 'r') as constants:
         return yaml.safe_load(constants)
